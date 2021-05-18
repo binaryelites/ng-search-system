@@ -51,7 +51,7 @@
                         <div class="row mt-3" ng-show="type == 'offline'">
                             <div class="col-md-8 mb-2">
                                 <div class="input-group">
-                                    <input ng-model="keyword" type="text"class="form-control" placeholder="Search Product Here ..." id="searchInput">
+                                    <input ng-model="keyword" type="text"class="form-control" ng-model='searchText' placeholder="Search Product Here ..." id="searchInput">
                                 </div>    
                             </div>
                             
@@ -195,9 +195,15 @@
                 $scope.allProducts = function(keyword) {
 
                     $scope.keyword = '';
-
-                    $http.get("http://27.147.135.164/ecomm/api/products/get_product_list")
-
+                    var $params = {};
+                    if($scope.searchText != null && $.trim($scope.searchText) != ''){
+                        $params.search = $scope.searchText;
+                    }
+                    $http({
+                      method: 'GET',
+                      url: 'http://27.147.135.164/ecomm/api/products/get_product_list',
+                      params: $params  
+                    })
                     .then(function(response){ 
                         $scope.products = response.data.product_list;
                         $scope.keyword = keyword;
